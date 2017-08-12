@@ -92,6 +92,10 @@ public class OpenDMX
             writer = (new Thread(new ThreadStart(WriteData)));
             writer.Start();
         }
+        else
+        {
+            throw new NotSupportedException("Can't seem to properly open OpenDMX device.");
+        }
     }
 
     /// <summary>
@@ -99,7 +103,12 @@ public class OpenDMX
     /// </summary>
     public static void Stop()
     {
-        writer.Abort();
+        if ( writer != null )
+            writer.Abort();
+
+        /// properly close the driver
+        if (handle != 0)
+            status = FT_Close(handle);
     }
 
     /// <summary>
